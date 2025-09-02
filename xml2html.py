@@ -7,6 +7,7 @@ from os import path
 import os
 import shutil
 from html.parser import HTMLParser
+import pandas as pd
 
 
 # HTML解析
@@ -154,19 +155,21 @@ def generate_html(temp_str, xml_list):
 
 
 # コンテンツのリンクを生成
-def generate_links(temp_str, contents_name, c_tree):
-    next = c_tree.next_contents_name(contents_name)
-    # print(contentsName, cTree, next)
-    if next is not None:
-        str = f'<a id="next" href="{next}.html"></a>'
+def generate_links(temp_str, contents_name, c_tree, metadata_df):
+    next_id = c_tree.next_contents_name(contents_name)
+    if next_id is not None:
+        genre = metadata_df[metadata_df['id'] == next_id]['genre'].values[0]
+        print(genre, next_id)
+        str = f'<a id="next" href="/{genre}/{next_id}.html"></a>'
         temp_str = temp_str.replace('<!-- next -->', str)
 
-    prev = c_tree.prev_contents_name(contents_name)
-    if prev is not None:
-        str = f'<a id="prev" href="{prev}.html"></a>'
+    prev_id = c_tree.prev_contents_name(contents_name)
+    if prev_id is not None:
+        genre = metadata_df[metadata_df['id'] == prev_id]['genre'].values[0]
+        str = f'<a id="prev" href="/{genre}/{prev_id}.html"></a>'
         temp_str = temp_str.replace('<!-- prev -->', str)
 
-    str = '<a id="close" href="./"></a>'
+    str = '<a id="close" href="/"></a>'
     # str = '<a id="close" href="../#'+contentsName+'"></a>'
     tempStr = temp_str.replace('<!-- close -->', str)
     return tempStr
@@ -178,7 +181,7 @@ class contents_tree(object):
         super(contents_tree, self).__init__()
 
     def file_open(self, dirname):
-        contents_tree = path.join(path.dirname(__file__), f'res/{dirname}/contentsTree.csv')
+        contents_tree = path.join(path.dirname(__file__), f'res/{dirname}contentsTree.csv')
         self.contents_list = []
         self.metadata_list = []
         with open(contents_tree, 'r') as fp:
@@ -228,14 +231,18 @@ class contents_tree(object):
         return result
     
 
-def make_index_html(dirname, metadata_list):
+def make_index_html(metadata_list):
     # index.htmlを作成
-    html_text = ''
+    html_text_dict = {}
     for metadata in metadata_list:
+        genre = metadata['genre']
+        if genre not in html_text_dict:
+            html_text_dict[genre] = ''
+
         # タイトルとdivを生成
         tmp = f"""
-        <div id="{metadata['id']}" class="flex_box {metadata['genre']}-box">
-            <a href="/{metadata['genre']}/{metadata['id']}.html">
+        <div id="{metadata['id']}" class="flex_box {genre}-box">
+            <a href="/{genre}/{metadata['id']}.html">
                 <img class="index-img" src="/img/index/{metadata['id']}.jpeg">
                 <div class="mask {metadata['genre']}-mask">
                     <div class="caption">
@@ -250,55 +257,37 @@ def make_index_html(dirname, metadata_list):
             </a>
         </div>
         """
-        html_text += tmp
+        html_text_dict[genre] += tmp
 
     # テンプレートファイルを取得
     with open(path.join(path.dirname(__file__), './res/templateIndex.html'), 'r') as f:
         lines = f.read().splitlines()
-        temp_idx_str = ''
+        index_str = ''
         for line in lines:
-            temp_idx_str += line
+            index_str += line
 
-    index_str = temp_idx_str.replace('<!--CONTENTS-->', html_text)
+    for genre, html_text in html_text_dict.items():
+        index_str = index_str.replace(f"<!--CONTENTS {genre.upper()}-->", html_text)
 
-    menu_text = """
-    <div id="head-menu-box">
-        <a href="/">Featured</a>
-        <a href="/art">Art</a>
-        <a href="/film">Film</a>
-        <a href="/code">Code</a>
-        <a href="/profile.html">About</a>
-    </div>
-    """
-    if len(dirname) > 0:
-        top_upper_dirname = dirname[0].upper() + dirname[1:]
-        menu_text = menu_text.replace(top_upper_dirname, f'<u>{top_upper_dirname}</u>')
-    else:
-        menu_text = menu_text.replace('Featured', '<u>Featured</u>')
-    index_str = index_str.replace('<!-- MENU -->', menu_text)
-    
 
-    dir_path = f'./dist/{dirname}/'
-    # if os.path.exists(dir_path):
-    #     shutil.rmtree(dir_path)
-    # os.mkdir(dir_path)
-    with open(f'{dir_path}index.html', 'w') as f:
+    with open(f'./dist/index.html', 'w') as f:
         index_str = re.sub('>\s+<', '><', index_str)
         index_str = re.sub('\s\s+', ' ', index_str)
         f.write(index_str)
-    print(f'Out: {dir_path}index.html')
+    print(f'Out: ./dist/index.html')
 
 
-def make_work_htmls(dirname, c_tree, metadata_list):
+def make_work_htmls(c_tree, metadata_list):
     # workディレクトリの内容物の生成
-    xml_fnames = [metadata['id'] for metadata in metadata_list]
+    metadata_df = pd.DataFrame(metadata_list)
     for in_file in glob.glob('./res//xml/*.xml'):
         fid = in_file.split('/')[-1].replace('.xml', '')
         # csvに含まれていなかったら飛ばす
-        if not fid in xml_fnames:
+        if not fid in metadata_df['id'].to_list():
             continue
-
-        out_file = f"./dist/{dirname}/{fid}.html"
+        
+        genre = metadata_df[metadata_df['id'] == fid]['genre'].values[0]
+        out_file = f"./dist/{genre}/{fid}.html"
 
         token = in_file.split('/')
         contents_name = token[len(token)-1].replace('.xml', '')
@@ -327,7 +316,7 @@ def make_work_htmls(dirname, c_tree, metadata_list):
         temp_str = generate_html(temp_str, xmlList)
 
         # コンテンツのリンクを生成
-        temp_str = generate_links(temp_str, contents_name, c_tree)
+        temp_str = generate_links(temp_str, contents_name, c_tree, metadata_df)
 
         # 全体の整形
         temp_str = re.sub('>\s+<', '><', temp_str)
@@ -343,17 +332,20 @@ def main():
     if len(args) >= 2:
         for dirname in args[1:]:
             print(f'{dirname}')
-
+            if not re.search('.+//'):
+                print(f'dirname format error: {dirname}')
+                continue
             c_tree = contents_tree()
             c_tree.file_open(dirname)
             metadata_list = c_tree.get_metadata_list()
-            make_index_html(dirname, metadata_list)
+            # make_index_html(dirname, metadata_list)
             make_work_htmls(dirname, c_tree, metadata_list)
 
     c_tree = contents_tree()
     c_tree.file_open('')
     metadata_list = c_tree.get_metadata_list()
-    make_index_html('', metadata_list)
+    make_index_html(metadata_list)
+    make_work_htmls(c_tree, metadata_list)
 
 if __name__ == '__main__':
     main()
