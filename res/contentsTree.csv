@@ -5,6 +5,7 @@ lost-anima,art,アニマの消失,2019.05,Media Art,,,Personal Work
 drawing_with_particles,art,Drawing with particles,2018.06,Media Art,,,Personal Work
 cube,art,CUBE,2018.12,Game,,,Project
 fruits-cut,art,FRUITS CUT!,2018.12,Game,,,Project
+kalfos-box,art,Kalfos Box,2018.10,Media Art,,,Personal Work
 live-and-let-live,film,live and let live,2021.03,Dance Film,6min,Director / Chinematograher /  Lighting / Colorlist,Project : sta21 & 筑波大学ダンス部
 hyakuninkimono,film,百人きもの KAGAI ~雅~ - ショートフィルム,2022.11,Movie,10min 43sec,Director / Cinematographer / Editor,Client work : 筑波山華やぎプロジェクト
 express,film,EXPRESS 筑波大学ダンス部,2020.01,Documentary Movie,15min 10sec / 11min 5sec / 15min 16sec,Director / Cinematographer / Editor,Project : sta21
@@ -27,15 +28,15 @@ mawase-making,film,MVメイキング映像「回せ！」,2020.04,Making Moive,4
 yuragi,film,ゆらぎ -ダイジェスト,2019.11,Digest Movie,1min 45sec,Director / Cinematographer / Editor,Client Work : TParty
 tparty-launch,film,Launch Party -ダイジェスト,2019.06,Digest Movie,6min 38sec,Director / Cinematographer / Editor,Client Work : TParty
 tsukuba-collection-2021no1,film,Tsukuba Collection 2021 no.1 KENT KISHIMA,2021.01,Promotion film,30sec,Director,
-onk-vlog,film,onk VLog,2022-2023,Vlog,,Director,Personal Work
-umidori,code,Umidori,2021.02,Visualization,,,Project : VisLab
-takobutsu,code,takobutsu,2024.06,Application,,,
-axy-vis,code,Axy Visualizer,2023.03,Visualization,,,Project : VisLab
-cvv,code,CVViewer,2022.08,Web application,,,Personal Work
-tra-js,code,Tra.js,2022.11,JavaScript Liblary,,,Personal Work
-umidori-intelligence,code,Umidori Intelligence,2021.06,Artifical Intelligence,,,Personal Work
-fishue,code,Fishue,2022.12,Web application,,,Personal Work
-color-selection,code,COLOR SELECTION,2019.01,Web application,,,Personal Work
-emavis,code,Emavis,2022.12,Visualization,,,
-location-data-generator,code,Location Data Generator,2023.02,Webcodelication,,,
-megeilt-tweet-system,code,ツイート共有システム,2018.05,Installation System,,,Project
+onk-vlog,film,onk VLog,2022-2025,Vlog,,Director,Personal Work
+umidori,app,Umidori,2021.02,Visualization,,,Project : VisLab
+takobutsu,app,takobutsu,2024.06,Application,,,
+axy-vis,app,Axy Visualizer,2023.03,Visualization,,,Project : VisLab
+cvv,app,CVViewer,2022.08,Web application,,,Personal Work
+tra-js,app,Tra.js,2022.11,JavaScript Liblary,,,Personal Work
+umidori-intelligence,app,Umidori Intelligence,2021.06,Artifical Intelligence,,,Personal Work
+fishue,app,Fishue,2022.12,Web application,,,Personal Work
+color-selection,app,COLOR SELECTION,2019.01,Web application,,,Personal Work
+emavis,app,Emavis,2022.12,Visualization,,,
+location-data-generator,app,Location Data Generator,2023.02,Webcodelication,,,
+megeilt-tweet-system,app,ツイート共有システム,2018.05,Installation System,,,Project
