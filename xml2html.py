@@ -168,8 +168,8 @@ def generate_links(temp_str, contents_name, c_tree, metadata_df):
         genre = metadata_df[metadata_df['id'] == prev_id]['genre'].values[0]
         str = f'<a id="prev" href="/{genre}/{prev_id}.html"></a>'
         temp_str = temp_str.replace('<!-- prev -->', str)
-
-    str = '<a id="close" href="/"></a>'
+    
+    str = f'<a id="close" href="/#{contents_name}"></a>'
     # str = '<a id="close" href="../#'+contentsName+'"></a>'
     tempStr = temp_str.replace('<!-- close -->', str)
     return tempStr
