@@ -40,7 +40,7 @@
   - xmlをhtmlに変換するpyhtonスクリプト
 - 実行コマンド
   ```
-  python3 xml2html.py art film code
+  python3 xml2html.py
   ```
 
 ## webサーバーでの動作確認
